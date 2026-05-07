@@ -1,5 +1,13 @@
 export type { Seller } from "./seller";
 
+export type StyleCluster =
+  | "romantic-feminine"
+  | "streetwear-urban"
+  | "minimal-classic"
+  | "boho-natural"
+  | "party-glam"
+  | "smart-casual";
+
 export interface ProductColor {
   name: string;
   hex: string;

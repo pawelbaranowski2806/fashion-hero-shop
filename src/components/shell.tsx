@@ -7,10 +7,13 @@ import { CartProvider, useCart } from "./cart-provider";
 import { WishlistProvider, useWishlist } from "./wishlist-provider";
 import { QuickViewProvider } from "./quick-view-provider";
 import { AuthProvider } from "./auth-provider";
+import { TasteProfileProvider, useTasteProfile } from "./taste-profile-provider";
+import { SwipeDeck } from "./swipe-deck";
 
 function ShellInner({ children }: { children: React.ReactNode }) {
   const { openCart, itemCount } = useCart();
   const { wishlistItems } = useWishlist();
+  const { isDeckOpen } = useTasteProfile();
 
   return (
     <>
@@ -18,6 +21,7 @@ function ShellInner({ children }: { children: React.ReactNode }) {
       <Header onCartOpen={openCart} cartCount={itemCount} wishlistCount={wishlistItems.length} />
       <main className="flex-1">{children}</main>
       <Footer />
+      {isDeckOpen && <SwipeDeck />}
     </>
   );
 }
@@ -25,13 +29,15 @@ function ShellInner({ children }: { children: React.ReactNode }) {
 export function Shell({ children }: { children: React.ReactNode }) {
   return (
     <AuthProvider>
-      <CartProvider>
-        <WishlistProvider>
-          <QuickViewProvider>
-            <ShellInner>{children}</ShellInner>
-          </QuickViewProvider>
-        </WishlistProvider>
-      </CartProvider>
+      <TasteProfileProvider>
+        <CartProvider>
+          <WishlistProvider>
+            <QuickViewProvider>
+              <ShellInner>{children}</ShellInner>
+            </QuickViewProvider>
+          </WishlistProvider>
+        </CartProvider>
+      </TasteProfileProvider>
     </AuthProvider>
   );
 }

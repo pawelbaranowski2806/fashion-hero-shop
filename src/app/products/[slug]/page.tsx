@@ -6,6 +6,8 @@ import { ProductInfo } from "@/components/product-info";
 import { ProductDetailsAccordion } from "@/components/product-details-accordion";
 import { RelatedProducts } from "@/components/related-products";
 import { RecentlyViewedSection } from "./recently-viewed-section";
+import { CompleteTheLook } from "@/components/complete-the-look";
+import { SwipeToast } from "@/components/swipe-toast";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -57,11 +59,17 @@ export default async function ProductPage({ params }: PageProps) {
         <ProductDetailsAccordion product={product} />
       </div>
 
+      {/* Complete the Look — personalised cross-sell */}
+      <CompleteTheLook currentProduct={product} />
+
       {/* Related products */}
       <RelatedProducts products={related} />
 
       {/* Recently viewed */}
       <RecentlyViewedSection productId={product.id} />
+
+      {/* Toast — shown at 6th swipe */}
+      <SwipeToast />
     </main>
   );
 }
