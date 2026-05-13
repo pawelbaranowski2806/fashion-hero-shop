@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Geist } from "next/font/google";
+import { Suspense } from "react";
 import { Shell } from "@/components/shell";
+import { PostHogPageView } from "@/components/posthog-provider";
 import "./globals.css";
 
 const geist = Geist({
@@ -22,6 +24,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${geist.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col">
+        <Suspense>
+          <PostHogPageView />
+        </Suspense>
         <Shell>{children}</Shell>
       </body>
     </html>

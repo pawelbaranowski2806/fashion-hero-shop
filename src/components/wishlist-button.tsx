@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import posthog from "posthog-js";
 import { HeartIcon, HeartFilledIcon } from "./icons";
 import { useWishlist } from "./wishlist-provider";
 import { cn } from "@/lib/utils";
@@ -20,6 +21,10 @@ export function WishlistButton({ productId, className }: WishlistButtonProps) {
     e.stopPropagation();
     setAnimating(true);
     toggleWishlist(productId);
+    posthog.capture("wishlist_toggled", {
+      product_id: productId,
+      action: wishlisted ? "removed" : "added",
+    });
     setTimeout(() => setAnimating(false), 300);
   }
 

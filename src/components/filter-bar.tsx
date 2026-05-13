@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import posthog from "posthog-js";
 import { ChevronDownIcon } from "./icons";
 import type { ShoeType, ShoeMaterial } from "@/types";
 
@@ -84,18 +85,21 @@ export function FilterBar({
   function handleGenderChange(gender: GenderFilter) {
     setActiveGender(gender);
     onFilterChange(gender);
+    posthog.capture("collection_filtered", { filter_type: "gender", value: gender });
   }
 
   function handleSortChange(sort: SortOption) {
     setActiveSort(sort);
     onSortChange(sort);
     setSortOpen(false);
+    posthog.capture("collection_filtered", { filter_type: "sort", value: sort });
   }
 
   function handlePriceRangeChange(range: PriceRange) {
     const next = activePriceRange === range ? "all" : range;
     setActivePriceRange(next);
     onPriceRangeChange(next);
+    posthog.capture("collection_filtered", { filter_type: "price_range", value: next });
   }
 
   function toggleShoeType(type: ShoeType) {
@@ -104,6 +108,7 @@ export function FilterBar({
       : [...activeShoeTypes, type];
     setActiveShoeTypes(next);
     onShoeTypeChange(next);
+    posthog.capture("collection_filtered", { filter_type: "shoe_type", value: next });
   }
 
   function toggleMaterial(material: ShoeMaterial) {
@@ -112,6 +117,7 @@ export function FilterBar({
       : [...activeMaterials, material];
     setActiveMaterials(next);
     onMaterialChange(next);
+    posthog.capture("collection_filtered", { filter_type: "material", value: next });
   }
 
   useEffect(() => {

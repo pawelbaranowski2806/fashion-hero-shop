@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import posthog from "posthog-js";
 import { useTasteProfile } from "./taste-profile-provider";
 import { getProductClusters, CLUSTER_LABELS, SWIPE_DECK_SLUGS } from "@/data/style-clusters";
 import { getProduct } from "@/data/products";
@@ -242,6 +243,13 @@ export function SwipeDeck() {
     setTimeout(() => {
       const direction = dir === "right" ? "like" : "pass";
       recordSwipe(product.id, direction, getProductClusters(product));
+      posthog.capture("product_swiped", {
+        product_id: product.id,
+        product_name: product.name,
+        direction,
+        swipe_method: "button",
+        card_index: currentIndex,
+      });
       setCurrentIndex((i) => i + 1);
       setEjectDir(null);
       isAnimating.current = false;
@@ -253,6 +261,13 @@ export function SwipeDeck() {
     const product = deckProducts[currentIndex];
     if (!product) return;
     recordSwipe(product.id, direction, getProductClusters(product));
+    posthog.capture("product_swiped", {
+      product_id: product.id,
+      product_name: product.name,
+      direction,
+      swipe_method: "drag",
+      card_index: currentIndex,
+    });
     setCurrentIndex((i) => i + 1);
   }
 
@@ -369,6 +384,14 @@ function SummaryScreen({
   swipeCount: number;
   onRediscover: () => void;
 }) {
+  useEffect(() => {
+    posthog.capture("swipe_deck_completed", {
+      swipe_count: swipeCount,
+      top_clusters: topClusters,
+    });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <div className="text-center max-w-sm px-4">
       <p className="text-[10px] uppercase tracking-[2px] text-neutral-500 mb-5">Your Style</p>
